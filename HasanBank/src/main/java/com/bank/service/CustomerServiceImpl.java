@@ -1,17 +1,20 @@
 package com.bank.service;
 
-import com.bank.entity.CustomerEntity;
-import com.bank.repo.ICustomerRepo;
-
-import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import com.bank.entity.AccountEntity;
+import com.bank.entity.CustomerEntity;
+import com.bank.mapper.CustomerMapper;
+import com.bank.model.CustomerDTO;
+import com.bank.repo.ICustomerRepo;
+
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -19,15 +22,20 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Autowired
     private ICustomerRepo customerRepo;
+    
+    @Autowired
+    private CustomerMapper customerMapper;
 
     @Override
     public CustomerEntity createCustomer(CustomerEntity customer) {
         return customerRepo.save(customer);
     }
 
+    @Transactional()
     @Override
     public Optional<CustomerEntity> getCustomerById(Long id) {
-        return customerRepo.findById(id);
+    	                                   
+    	return customerRepo.findById(id);
     }
 
     @Override
@@ -50,7 +58,7 @@ public class CustomerServiceImpl implements ICustomerService {
     public void deleteCustomer(Long id) {
         customerRepo.deleteById(id);
     }
-    
+
     @Override
     @Transactional()
     public List<CustomerEntity> getCustomersByDescriptionAndCreationDateBetween(
@@ -58,4 +66,5 @@ public class CustomerServiceImpl implements ICustomerService {
         log.info("Finding customers by description '{}' between {} and {}", description, startDate, endDate);
         return customerRepo.findByDescriptionAndCreationDateBetween(description, startDate, endDate);
     }
+
 }
