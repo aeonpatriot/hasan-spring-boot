@@ -1,9 +1,11 @@
 package com.bank.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.demo.exceptions.GlobalControllerExceptionHandler;
 
 import com.bank.entity.CustomerEntity;
 import com.bank.mapper.CustomerMapper;
 import com.bank.model.CustomerDTO;
 import com.bank.service.ICustomerService;
+
 
 import lombok.AllArgsConstructor;
 
@@ -66,5 +72,14 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/searchByDate")
+    public List<CustomerDTO> getCustomersByDescriptionAndCreationDateBetween(
+            @RequestParam String description,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+        List<CustomerEntity> customers = customerService.getCustomersByDescriptionAndCreationDateBetween(description, startDate, endDate);
+        return customerMapper.toDtoList(customers);
     }
 }
