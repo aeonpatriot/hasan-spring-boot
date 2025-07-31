@@ -10,8 +10,8 @@
 	</properties>
     <modules>
         <module>Backend_Util</module>
-		<module>Demo</module>
-		<module>Bank</module>
+		<module>HasanDemo</module>
+		<module>HasanBank</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
